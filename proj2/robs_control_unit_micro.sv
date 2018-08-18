@@ -3,9 +3,9 @@
 module robs_control_unit_micro(
 	input clk, reset,
 	input zq, zy, zr,
-	output[14:0] c,
+	output [14:0] c,
 	output logic done
-	);
+);
 	
     wire load_incr;
     wire [4:0] upc;
@@ -24,7 +24,9 @@ module robs_control_unit_micro(
 	assign c = uinstr[14:0];
     
     always_latch// @(upc)
-      if(reset) done = 0;
-      else if(upc == 17) done = 1;
+        if(reset) 
+            done = 0;
+        else if(upc == 17) 
+            done = 1;
     
 endmodule

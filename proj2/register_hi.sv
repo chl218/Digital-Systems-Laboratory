@@ -1,21 +1,30 @@
-// load and store register with signals to control 
-//   high and low bits separately or at the same time
-module register_hl # (parameter N = 16)
- (input                clk,
-  input [N/2-1:0]      inh,
-  input [N/2-1:0]      inl,
-  input                loadh,
-  input                loadl,
-  input                clear,
-  output logic[N-1:0]  out	  	);
-	
-  always_ff @ (posedge clk, posedge clear) begin
+// Asynchronous load and store register with signals to control 
+// high and low bits seperately or at the same time
+module register_hl # (parameter WIDTH = 16) (
+   input                       clk,
+   input        [WIDTH/2-1:0]  inh,
+   input        [WIDTH/2-1:0]  inl,
+   input                       loadh,
+   input                       loadl,
+   input                       clear,
+   output logic [WIDTH-1:0]    out
+);
+   
+   always_ff @ (posedge clk, posedge clear) begin
+      if(clear)
+         out <= 0;
+      else begin
+         if(loadh) out[WIDTH-1:WIDTH/2] <= inh;
+         if(loadl) out[WIDTH/2-1:0]     <= inl;
+      end
+
+
 //fill in the guts
-//  clear   loadh    loadl	 out[N-1:N/2]   out[N/2-1:0] 
-//    1		  x		   x	     0				 0
+//  clear   loadh    loadl  out[WIDTH-1:WIDTH/2]   out[WIDTH/2-1:0] 
+//    1       x         x       0             0
 //    0       0        1       hold             inl
 //    0       1        0       inh              hold
 //    0       1        1       inh              inl
 //    0       0        0       hold             hold
-  end	
+  end 
 endmodule

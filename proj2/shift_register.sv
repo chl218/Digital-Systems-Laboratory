@@ -8,21 +8,24 @@ module right_shift_register #(parameter WIDTH = 16) (
 );
 
 
+   logic [WIDTH-1:0] sr_out;
+
+
    always @(posedge clk) begin
       if(enable) begin
-         out[WIDTH-2:0] <= in[WIDTH-1:1];
-         // out[WIDTH-1]   <= mode ? in[WIDTH-1] : 1'b0;
-         out[WIDTH-1]   <= mode ? 1'b0 : in[WIDTH-1]; 
+         sr_out[WIDTH-2:0] <= in[WIDTH-1:1];
+         sr_out[WIDTH-1]   <= mode ? 1'b0 : in[WIDTH-1]; 
       end
    end
 
+   assign out = sr_out;
 
 // fill in the guts  -- holds or shifts by 1 bit position
 //    enable   mode      out  
 //      0       0        hold
 //      0       1        hold
-//      1       0        logical right shift
-//      1       1        arithmetic right shift
+//      1       1        logical right shift
+//      1       0        arithmetic right shift
     
 
 

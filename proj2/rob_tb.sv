@@ -25,8 +25,10 @@ module rob_tb;
                      ,.product(product)
                      ,.done(done));
 
-   static int N = 100;
    static int M = 100;
+   static int N = 100;
+
+   static int THRESHOLD = 10;
 
    int error = 0;
    int skip  = 0;
@@ -42,9 +44,7 @@ module rob_tb;
          expected_product = 0;
          rslt_disp;
 
-         // Add stimulus here
-
-//1.1 Positive Multiplicand and Positive Multiplier
+// 1.1 Positive Multiplicand and Positive Multiplier
          multiplier       = 5;
          multiplicand     = 6;
          expected_product = 30;
@@ -52,8 +52,8 @@ module rob_tb;
 
 // 1.2 Positive Multiplicand and Positive Multiplier
          multiplier = 7;
-         multiplicand = 5;
-         expected_product = 35;
+         multiplicand = -5;
+         expected_product = -35;
          rslt_disp;
 
 // 2.1 Negative Multiplicand and Positive Multiplier
@@ -93,45 +93,51 @@ module rob_tb;
          rslt_disp;
 
 
-         $display("\nTesting 0 x 0 to %3d x %3d:", N, M);
+         multiplier       = -1;
+         multiplicand     = -1;
+         expected_product =  1;
+         rslt_disp;
 
-         error = 0;
-         skip  = 1;
-         for(int i = 0; i < N; i++) begin
-            for(int j = 0; j < M; j++) begin
-               for(int k = 0; k < 4; k++) begin
-                  case(k)
-                     0: begin 
-                        multiplier   = i;
-                        multiplicand = j;
-                        expected_product = $signed(multiplier) * $signed(multiplicand);
-                     end 
-                     1:begin 
-                        multiplier   = -i;
-                        multiplicand = j;
-                        expected_product = $signed(multiplier) * $signed(multiplicand);
-                     end
-                     2:begin 
-                        multiplier   = i;
-                        multiplicand = -j;
-                        expected_product = $signed(multiplier) * $signed(multiplicand);
-                     end
-                     3:begin 
-                        multiplier   = -i;
-                        multiplicand = -j;
-                        expected_product = $signed(multiplier) * $signed(multiplicand);
-                      end
-                  endcase
-                  rslt_disp;
-                  if(error == 5)
-                     break;
-               end
-                  if(error == 5)
-                     break;
-            end
-               if(error == 5)
-                  break;
-         end
+
+//          $display("\nTesting 0 x 0 to %3d x %3d:", M, N);
+
+//          error = 0;
+//          skip  = 1;
+//          for(int i = 0; i < M; i++) begin
+//             for(int j = 0; j < N; j++) begin
+//                for(int k = 0; k < 4; k++) begin
+//                   case(k)
+//                      0: begin 
+//                         multiplier   = i;
+//                         multiplicand = j;
+//                         expected_product = $signed(multiplier) * $signed(multiplicand);
+//                      end 
+//                      1:begin 
+//                         multiplier   = -i;
+//                         multiplicand = j;
+//                         expected_product = $signed(multiplier) * $signed(multiplicand);
+//                      end
+//                      2:begin 
+//                         multiplier   = i;
+//                         multiplicand = -j;
+//                         expected_product = $signed(multiplier) * $signed(multiplicand);
+//                      end
+//                      3:begin 
+//                         multiplier   = -i;
+//                         multiplicand = -j;
+//                         expected_product = $signed(multiplier) * $signed(multiplicand);
+//                       end
+//                   endcase
+//                   rslt_disp;
+//                   if(error == THRESHOLD)
+//                      break;
+//                end
+//                   if(error == THRESHOLD)
+//                      break;
+//             end
+//                if(error == THRESHOLD)
+//                   break;
+//          end
 
          #40 $stop;
     end

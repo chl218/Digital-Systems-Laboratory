@@ -2,7 +2,7 @@
 // maximal-length sequence
 module prbs8(
    input       clk, 
-               reset,
+               rst,
    input [7:0] mask,
    output      rand1
 );
@@ -11,8 +11,8 @@ module prbs8(
   logic [7:0] temp;
   
   always @ (posedge clk) 
-      if(reset) temp <= 8'hff;
-      else      temp <= {temp[6:0],^(temp & mask)};
+      if(rst) temp <= 8'hff;
+      else    temp <= {temp[6:0], ^(temp & mask)};
 
   assign rand1 = temp[0];
 

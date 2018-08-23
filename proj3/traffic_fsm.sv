@@ -1,16 +1,13 @@
-// shell for your DUT -- Lab 3   traffic   summer 2018  CSE140L
-module traffic(
-   input              clk,
-                      rst,
-                      Ta,
-                      Tb,  // NS traffic present; EW traffic present
-   output logic [1:0] La, 
-                      Lb   // traffic light NS; traffic signal EW
+module traffic_fsm(
+   input clk,
+   input rst,
+   input Ta,
+   input Tb,
+   input Lb,
+   input priority,
+   output logic [1:0] La
 );
 
-// map La=0 to green, La=1 to yellow, La=2 to red; same for Lb
-
-// your (Moore) state machine goes here
 
    parameter S00 = 4'h0;
    parameter S01 = 4'h1;
@@ -32,8 +29,6 @@ module traffic(
    logic [3:0] state;
    logic [3:0] next_state;
 
-   assign Lb = 2'bxx;
-
    always_ff @(posedge clk, posedge  rst)
       if(rst) begin
          state      <= 0;
@@ -45,7 +40,9 @@ module traffic(
 
    always_comb 
       case(state) 
-         S00: next_state = Tb ? S00 : S01;   // RED
+         S00: if(Ta && Tb && priority) next_state = S01;   // RED
+              else if(Ta && !Lb)       next_state = S01;
+              else                     next_state = S00;
          S01: next_state = S02;              // RED
          S02: if(Tb)      next_state = S08;  // GREEN
               else if(Ta) next_state = S02;        
@@ -76,6 +73,5 @@ module traffic(
             S07:     La = 2'b01; // YELLOW
             default: La = 1'b00; // GREEN
          endcase
+
 endmodule
-
-

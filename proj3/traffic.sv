@@ -1,4 +1,3 @@
-// shell for your DUT -- Lab 3   traffic   summer 2018  CSE140L
 module traffic(
    input              clk,
                       rst,
@@ -8,10 +7,7 @@ module traffic(
                       Lb   // traffic light NS; traffic signal EW
 );
 
-// map La=0 to green, La=1 to yellow, La=2 to red; same for Lb
-
-// your (Moore) state machine goes here
-
+   // map La=0 to green, La=1 to yellow, La=2 to red; same for Lb
 
    logic la, lb;
 
@@ -20,19 +16,19 @@ module traffic(
 
    traffic_fsm NS(.clk(clk)
                  ,.rst(rst)
-                 ,.Ta(Ta)
-                 ,.Tb(Tb)
-                 ,.Lb(lb)
-                 ,.priority(1'b1)
-                 ,.La(La));
+                 ,.Tself(Ta)
+                 ,.Tother(Tb)
+                 ,.Lother(lb)
+                 ,.hasPriority(1'b1)
+                 ,.Lself(La));
 
    traffic_fsm EW(.clk(clk)
                  ,.rst(rst)
-                 ,.Ta(Tb)
-                 ,.Tb(Ta)
-                 ,.Lb(la)
-                 ,.priority(1'b0)
-                 ,.La(Lb));
+                 ,.Tself(Tb)
+                 ,.Tother(Ta)
+                 ,.Lother(la)
+                 ,.hasPriority(1'b0)
+                 ,.Lself(Lb));
 
 
 endmodule

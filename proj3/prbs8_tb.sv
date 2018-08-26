@@ -11,11 +11,11 @@ module prbs8_tb();
 
    logic       clk  = 0; 
    logic       rst  = 1;
-   logic [7:0] mask = 8'he1; // PNG feedback pattern 
+   logic [7:0] mask = 8'hE1;  // PNG feedback pattern 
   
-   wire rand1;                  // output of PNG
+   wire out; // output of PNG
   
-   prbs8 pr (.*);             // your DUT
+   prbs8 pr(.clk(clk), .rst(rst), .mask(mask), .out(out)); // DUT
   
    always begin
       #5ns clk <= 1;

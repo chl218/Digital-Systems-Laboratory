@@ -44,12 +44,12 @@ module encoder #(parameter WIDTH = 8)(
             ,.lfsr_init(lfsr_init)
             ,.lfsr_en(lfsr_en)
             ,.lfsr_tab(lfsr_tab)
-            ,.init_lfsr(lfsr_init_state)
+            ,.lfsr_init_state(data_o)
             ,.state_o(lfsr_state));
 
 
-   assign data_i = STATE04 ? (lfsr_state ^ 8'b1010_0000)
-                           : (lfsr_state ^ data_o);
+   assign data_i = state == STATE04 ? (lfsr_state ^ 8'b1010_0000)
+                                    : (lfsr_state ^ data_o);
 
    always_comb begin
       
@@ -70,14 +70,14 @@ module encoder #(parameter WIDTH = 8)(
          STATE03: state_next = STATE04;
          STATE04: state_next = padding == 0 ? STATE05 : STATE04;
          STATE05: state_next = STATE05;
-         default: state_next = init ? STATE01 : STATE00;
+         default: state_next = init ? STATE00 : STATE01;
       endcase
 
       case(state)
          STATE01: raddr_next = 62;
          STATE02: raddr_next = 61;
-         STATE03: raddr_next = ~0;
-         STATE04: raddr_next = ~0;
+         STATE03: raddr_next = 0;
+         STATE04: raddr_next = 0;
          STATE05: raddr_next = raddr + 1'b1;
          default: raddr_next = 63;
       endcase;
@@ -85,7 +85,7 @@ module encoder #(parameter WIDTH = 8)(
       case(state)
          STATE04: waddr_next = waddr + 1'b1;
          STATE05: waddr_next = waddr + 1'b1;
-         default: waddr_next = ~0;
+         default: waddr_next = 64;
       endcase 
 
    end
@@ -96,8 +96,8 @@ module encoder #(parameter WIDTH = 8)(
 
    always_ff @(posedge clk)
       if(init) begin
-         counter <= 0;
-         state   <= 0;
+         counter         <= 0;
+         state           <= 0;
       end
       else begin
          counter <= counter + 1'b1;
@@ -105,9 +105,11 @@ module encoder #(parameter WIDTH = 8)(
          waddr   <= waddr_next;
          raddr   <= raddr_next;
          
-         if(STATE01) lfsr_init_state <= data_o;
-         if(STATE02) lfsr_tab        <= data_o;
-         if(STATE03) padding         <= data_o;
+         if(state == STATE01) lfsr_init_state <= data_o;
+
+         if(state == STATE02) lfsr_tab        <= data_o;
+         
+         if(state == STATE03) padding         <= data_o;
       end
 
    assign done = &counter;

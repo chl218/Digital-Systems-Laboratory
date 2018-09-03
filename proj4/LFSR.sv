@@ -16,7 +16,7 @@ module LFSR(
       end
       else begin
          if(lfsr_en) begin
-            state <= {^(state & lfsr_tab), state[7:1]};
+            state <= {state[6:0], ^(state & lfsr_tab)};
          end
       end
 

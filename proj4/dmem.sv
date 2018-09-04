@@ -13,6 +13,8 @@ module dmem #(parameter WIDTH = 8) (
    output [WIDTH-1:0] data_o
 );
 
+
+
    // memory core
    // [0:47]   = original message
    // [61]     = preamble length
@@ -23,12 +25,21 @@ module dmem #(parameter WIDTH = 8) (
    // W bits wide [W-1:0] and byte_count registers deep   
    logic [WIDTH-1:0] mem[2**WIDTH];   
 
+
+   initial begin
+
+   end
+
    // combinational reads w/ blanking of address 0
    assign data_o = mem[raddr] ;   
 
    // sequential (clocked) writes   
    always_ff @ (posedge clk)
-      if(wen)
-         mem[waddr] <= data_i;
+      if(init) 
+         for(int i = 0; i < 60; i++) 
+            mem[i] = 8'hA0;
+      else
+         if(wen)
+            mem[waddr] <= data_i;
 
 endmodule

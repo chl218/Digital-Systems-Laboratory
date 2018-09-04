@@ -56,6 +56,7 @@ module Lab4_tb                 ;
       #20ns init = 0             ;
       #60ns;    
       for(int ij = 0; ij < 60; ij++) begin
+         // $display("%2d Solution steps: %h %h", ij, msg_padded[ij], LFSR);
          msg_crypto[ij] = msg_padded[ij] ^ LFSR;//{1'b0,LFSR[6:0]};    // encrypt 7 LSBs
          LFSR           = (LFSR << 1) + (^(LFSR & lfsr_ptrn));//{LFSR[6:0],(^LFSR[5:3]^LFSR[7])};        // roll the rolling code
          str_enc[ij]    = string'(msg_crypto[ij]);
